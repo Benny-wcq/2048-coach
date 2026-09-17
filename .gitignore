@@ -1,0 +1,15 @@
+# Python-generated files
+__pycache__/
+*.py[cod]
+
+# Local environments
+.env
+.env/
+.venv/
+venv/
+
+# macOS files
+.DS_Store
+
+# Personal game recordings
+games/
