@@ -3,179 +3,166 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2048 · Enjoy the process</title>
+<title>2048 · Corner Coach</title>
 <style>
-  * { box-sizing: border-box; }
+* { box-sizing: border-box; }
 
-  body {
-    --page: #faf5ee;
-    --ink: #514841;
-    --accent: #765b48;
-    --board: #bcad9f;
-    --empty: #d7cbc0;
-    margin: 0;
-    background: var(--page);
-    color: var(--ink);
-    font-family: system-ui, -apple-system, sans-serif;
-  }
+body {
+  --page: #faf5ee;
+  --ink: #514841;
+  --accent: #765b48;
+  --board: #bcad9f;
+  --empty: #d7cbc0;
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, sans-serif;
+}
 
-  body[data-theme="rose"] {
-    --page: #fff4f7;
-    --ink: #663e52;
-    --accent: #a64d76;
-    --board: #d6afc0;
-    --empty: #ebd2dd;
-  }
+body[data-theme="rose"] {
+  --page: #fff4f7;
+  --ink: #663e52;
+  --accent: #a64d76;
+  --board: #d6afc0;
+  --empty: #ebd2dd;
+}
 
-  body[data-theme="forest"] {
-    --page: #f1f6ef;
-    --ink: #354e40;
-    --accent: #426e52;
-    --board: #a4b6a3;
-    --empty: #cedacb;
-  }
+body[data-theme="forest"] {
+  --page: #f1f6ef;
+  --ink: #354e40;
+  --accent: #426e52;
+  --board: #a4b6a3;
+  --empty: #cedacb;
+}
 
-  main {
-    max-width: 490px;
-    margin: 36px auto;
-    padding: 0 20px 30px;
-  }
+main {
+  max-width: 490px;
+  margin: 28px auto;
+  padding: 0 20px 30px;
+}
 
-  .eyebrow {
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    opacity: .7;
-  }
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: .7;
+}
 
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
 
-  h1 {
-    font-size: clamp(52px, 13vw, 76px);
-    margin: 4px 0;
-    letter-spacing: -5px;
-  }
+h1 {
+  font-size: clamp(50px, 13vw, 72px);
+  margin: 5px 0;
+  letter-spacing: -4px;
+}
 
-  .scores { display: flex; gap: 8px; }
+.scores { display: flex; gap: 8px; }
 
-  .score {
-    background: var(--accent);
-    color: white;
-    padding: 10px 13px;
-    border-radius: 14px;
-    text-align: center;
-    min-width: 76px;
-  }
+.score {
+  background: var(--accent);
+  color: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
+}
 
-  .score small {
-    display: block;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: .8;
-  }
+.score small { display: block; font-size: 11px; }
+.score strong { font-size: 21px; }
 
-  .score strong { font-size: 21px; }
+.toolbar, .actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0;
+}
 
-  .intro { margin: 4px 0 20px; opacity: .8; }
+button, select {
+  font: inherit;
+  padding: 9px 11px;
+  border: 1px solid #0002;
+  border-radius: 9px;
+  background: #ffffffbb;
+  color: var(--ink);
+}
 
-  .toolbar, .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-    margin: 12px 0;
-  }
+button { cursor: pointer; }
 
-  button, select {
-    font: inherit;
-    border: 1px solid #0002;
-    border-radius: 10px;
-    padding: 10px 13px;
-    cursor: pointer;
-    background: #ffffffb3;
-    color: var(--ink);
-  }
+.primary {
+  background: var(--accent);
+  color: white;
+}
 
-  button.primary {
-    background: var(--accent);
-    color: white;
-    border-color: transparent;
-  }
+button:focus-visible, select:focus-visible, #board:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
 
-  button:hover { filter: brightness(.96); }
+#board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 10px;
+  border-radius: 16px;
+  background: var(--board);
+  touch-action: none;
+  user-select: none;
+}
 
-  button:focus-visible, select:focus-visible, #board:focus-visible {
-    outline: 3px solid var(--accent);
-    outline-offset: 3px;
-  }
+.tile {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: var(--empty);
+  font-size: clamp(22px, 7vw, 40px);
+  font-weight: 750;
+}
 
-  #board {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    padding: 10px;
-    background: var(--board);
-    border-radius: 18px;
-    touch-action: none;
-    user-select: none;
-  }
+.tile.small { font-size: clamp(17px, 5vw, 28px); }
 
-  .tile {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    font-size: clamp(22px, 7vw, 40px);
-    font-weight: 750;
-    background: var(--empty);
-    color: #645447;
-  }
+.tile.anchor {
+  box-shadow: inset 0 0 0 3px var(--accent);
+}
 
-  .tile.small { font-size: clamp(18px, 5vw, 29px); }
+.tile.spawn { animation: pop .15s ease-out; }
 
-  .tile.spawn { animation: appear .15s ease-out; }
+@keyframes pop {
+  from { transform: scale(.7); opacity: .4; }
+  to { transform: scale(1); opacity: 1; }
+}
 
-  @keyframes appear {
-    from { transform: scale(.65); opacity: .3; }
-    to { transform: scale(1); opacity: 1; }
-  }
+.coach {
+  background: #ffffff99;
+  padding: 16px;
+  border-radius: 14px;
+}
 
-  #status { min-height: 24px; margin-bottom: 8px; }
+#hint { line-height: 1.5; font-size: 14px; }
+#status { min-height: 24px; }
 
-  .coach {
-    background: #ffffff99;
-    border: 1px solid #0000000d;
-    border-radius: 16px;
-    padding: 16px;
-  }
+.note {
+  font-size: 12px;
+  line-height: 1.6;
+  opacity: .75;
+}
 
-  .coach label { font-weight: 650; }
+footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 13px;
+  opacity: .7;
+}
 
-  #hint {
-    line-height: 1.5;
-    margin: 10px 0 0;
-    font-size: 14px;
-  }
-
-  .footnote { font-size: 12px; opacity: .7; line-height: 1.6; }
-
-  footer {
-    text-align: center;
-    margin-top: 26px;
-    font-size: 13px;
-    opacity: .7;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .tile.spawn { animation: none; }
-  }
+@media (prefers-reduced-motion: reduce) {
+  .tile.spawn { animation: none; }
+}
 </style>
 </head>
 
@@ -187,20 +174,18 @@
     <h1>2048</h1>
     <div class="scores">
       <div class="score">
-        <small>Score</small>
-        <strong id="score">0</strong>
+        <small>Score</small><strong id="score">0</strong>
       </div>
       <div class="score">
-        <small>Best</small>
-        <strong id="best">0</strong>
+        <small>Best</small><strong id="best">0</strong>
       </div>
     </div>
   </header>
 
-  <p class="intro">Enjoy the process. One move at a time.</p>
+  <p>Enjoy the process. One move at a time.</p>
 
   <div class="toolbar">
-    <button class="primary" id="newGame">New game</button>
+    <button id="newGame" class="primary">New game</button>
     <label for="theme">Theme</label>
     <select id="theme">
       <option value="classic">Warm classic</option>
@@ -210,28 +195,45 @@
   </div>
 
   <div id="board" tabindex="0"
-       aria-label="2048 board. Use the arrow keys to play."></div>
+       aria-label="2048 board. Use arrow keys to play."></div>
 
   <p id="status" role="status"></p>
 
-  <div class="coach">
+  <section class="coach">
     <label>
-      <input type="checkbox" id="coachEnabled">
+      <input id="coachEnabled" type="checkbox" checked>
       Show coach suggestions
     </label>
-    <p id="hint">Play your way. Turn on the coach whenever you like.</p>
-  </div>
+
+    <div class="toolbar">
+      <label for="corner">My corner</label>
+      <select id="corner">
+        <option value="bl">↙ Bottom-left</option>
+        <option value="br">↘ Bottom-right</option>
+        <option value="tl">↖ Top-left</option>
+        <option value="tr">↗ Top-right</option>
+      </select>
+    </div>
+
+    <p class="note">
+      The outlined cell is your chosen corner.
+      Once a largest tile is there, advice preserves it whenever
+      a legal move can do so.
+    </p>
+
+    <p id="hint"></p>
+  </section>
 
   <div class="actions">
     <button id="download">Download recording</button>
     <span id="moveCount">0 moves</span>
   </div>
 
-  <p class="footnote">
-    Arrow keys or WASD on a computer. Swipe on a phone.
-    Recordings stay in this tab until you download them.
-    Download before closing or starting a new game.
-    Best score is stored in this browser when storage is available.
+  <p class="note">
+    Arrow keys or WASD; swipe on a phone.
+    Download your recording before closing or starting again.
+    Best score is stored locally when browser storage is available.
+    Advice is experimental, not a guarantee.
   </p>
 
   <footer>Made with curiosity · Built to keep learning</footer>
@@ -243,17 +245,19 @@
 const $ = id => document.getElementById(id);
 const directions = ["left", "right", "up", "down"];
 
+const corners = {
+  bl: { r: 3, c: 0, name: "bottom-left" },
+  br: { r: 3, c: 3, name: "bottom-right" },
+  tl: { r: 0, c: 0, name: "top-left" },
+  tr: { r: 0, c: 3, name: "top-right" }
+};
+
 const colors = {
-  2: "#eee4da",
-  4: "#ede0c8",
-  8: "#f2b179",
-  16: "#f59563",
-  32: "#f67c5f",
-  64: "#f65e3b",
-  128: "#edcf72",
-  256: "#edcc61",
-  512: "#edc850",
-  1024: "#edc53f",
+  2: "#eee4da", 4: "#ede0c8",
+  8: "#f2b179", 16: "#f59563",
+  32: "#f67c5f", 64: "#f65e3b",
+  128: "#edcf72", 256: "#edcc61",
+  512: "#edc850", 1024: "#edc53f",
   2048: "#edc22e"
 };
 
@@ -261,12 +265,14 @@ let board, score, record;
 let best = 0;
 let won = false;
 let exportedMoves = 0;
+let currentAdvice = null;
 
 try {
   best = Number(localStorage.getItem("chuqi2048best")) || 0;
 } catch (_) {}
 
 const copy = b => b.map(row => [...row]);
+const largest = b => Math.max(...b.flat());
 const same = (a, b) =>
   a.every((row, r) => row.every((v, c) => v === b[r][c]));
 
@@ -274,7 +280,7 @@ function emptyCells(b) {
   const cells = [];
   for (let r = 0; r < 4; r++) {
     for (let c = 0; c < 4; c++) {
-      if (b[r][c] === 0) cells.push([r, c]);
+      if (!b[r][c]) cells.push([r, c]);
     }
   }
   return cells;
@@ -282,39 +288,37 @@ function emptyCells(b) {
 
 function mergeLeft(row) {
   const tiles = row.filter(v => v !== 0);
-  const merged = [];
+  const line = [];
   let points = 0;
 
   for (let i = 0; i < tiles.length;) {
     if (i + 1 < tiles.length && tiles[i] === tiles[i + 1]) {
       const value = tiles[i] * 2;
-      merged.push(value);
+      line.push(value);
       points += value;
       i += 2;
     } else {
-      merged.push(tiles[i]);
+      line.push(tiles[i]);
       i++;
     }
   }
 
-  while (merged.length < 4) merged.push(0);
-  return { line: merged, points };
+  while (line.length < 4) line.push(0);
+  return { line, points };
 }
 
 function move(b, direction) {
   const output = Array.from({ length: 4 }, () => [0, 0, 0, 0]);
+  const horizontal = ["left", "right"].includes(direction);
+  const reverse = ["right", "down"].includes(direction);
   let points = 0;
 
   for (let index = 0; index < 4; index++) {
-    const horizontal = direction === "left" || direction === "right";
-    const reverse = direction === "right" || direction === "down";
-
     let line = horizontal
       ? [...b[index]]
       : b.map(row => row[index]);
 
     if (reverse) line.reverse();
-
     const result = mergeLeft(line);
     if (reverse) result.line.reverse();
 
@@ -330,7 +334,7 @@ function move(b, direction) {
 }
 
 function hasMove(b) {
-  return directions.some(direction => move(b, direction).changed);
+  return directions.some(d => move(b, d).changed);
 }
 
 function spawn(b) {
@@ -340,12 +344,25 @@ function spawn(b) {
   const [r, c] = empty[Math.floor(Math.random() * empty.length)];
   const value = Math.random() < 0.9 ? 2 : 4;
   b[r][c] = value;
-
   return { row: r, column: c, value };
 }
 
-// Same experimental evaluation as the Python coach.
-function evaluate(b) {
+function anchored(b, corner) {
+  const maximum = largest(b);
+  return maximum > 0 && b[corner.r][corner.c] === maximum;
+}
+
+// Orient the preferred corner to the top-left for evaluation.
+function orient(b, corner) {
+  let oriented = copy(b);
+  if (corner.r === 3) oriented.reverse();
+  if (corner.c === 3) {
+    oriented = oriented.map(row => row.reverse());
+  }
+  return oriented;
+}
+
+function evaluate(b, corner) {
   if (!hasMove(b)) return -10000;
 
   let pairs = 0;
@@ -363,82 +380,156 @@ function evaluate(b) {
       for (const neighbour of neighbours) {
         if (!neighbour) continue;
         if (value === neighbour) pairs++;
-        roughness += Math.abs(Math.log2(value) - Math.log2(neighbour));
+        roughness += Math.abs(
+          Math.log2(value) - Math.log2(neighbour)
+        );
       }
     }
   }
 
-  const largest = Math.max(...b.flat());
-  const corners = [b[0][0], b[0][3], b[3][0], b[3][3]];
-  const cornerBonus =
-    largest > 0 && corners.includes(largest) ? Math.log2(largest) : 0;
+  // Penalise values increasing away from the preferred corner.
+  const oriented = orient(b, corner);
+  let orderPenalty = 0;
 
+  function inspectLine(line) {
+    const values = line.filter(v => v > 0).map(Math.log2);
+    for (let i = 0; i + 1 < values.length; i++) {
+      orderPenalty += Math.max(0, values[i + 1] - values[i]);
+    }
+  }
+
+  for (let i = 0; i < 4; i++) {
+    inspectLine(oriented[i]);
+    inspectLine(oriented.map(row => row[i]));
+  }
+
+  const maximum = largest(b);
+  const cornerBonus = anchored(b, corner) ? Math.log2(maximum) : 0;
+
+  // Weights are experimental.
   return (
     100 * emptyCells(b).length +
     20 * pairs +
     30 * cornerBonus -
-    5 * roughness
+    5 * roughness -
+    12 * orderPenalty
   );
 }
 
-function expectedValue(b) {
+function expectedValue(b, corner) {
   const empty = emptyCells(b);
-  if (!empty.length) return evaluate(b);
+  if (!empty.length) return evaluate(b, corner);
 
   let total = 0;
 
   for (const [r, c] of empty) {
-    for (const [value, probability] of [[2, 0.9], [4, 0.1]]) {
+    for (const [value, probability] of [[2, .9], [4, .1]]) {
       const possible = copy(b);
       possible[r][c] = value;
-      total += probability / empty.length * evaluate(possible);
+      total += probability / empty.length * evaluate(possible, corner);
     }
   }
 
   return total;
 }
 
-function updateHint() {
-  if (!$("coachEnabled").checked) {
-    $("hint").textContent =
-      "Play your way. Turn on the coach whenever you like.";
-    return;
-  }
+function chooseAdvice() {
+  const corner = corners[$("corner").value];
+  const wasAnchored = anchored(board, corner);
 
-  let chosen = null;
+  let candidates = directions.map(direction => ({
+    direction,
+    ...move(board, direction)
+  })).filter(candidate => candidate.changed);
 
-  for (const direction of directions) {
-    const result = move(board, direction);
-    if (!result.changed) continue;
+  if (!candidates.length) return null;
 
-    const value = expectedValue(result.board) + 0.1 * result.points;
+  let mode = "building";
 
-    if (!chosen || value > chosen.value) {
-      chosen = {
-        direction,
-        value,
-        points: result.points,
-        spaces: Math.max(0, emptyCells(result.board).length - 1)
-      };
+  if (wasAnchored) {
+    const preserving = candidates.filter(candidate =>
+      anchored(candidate.board, corner)
+    );
+
+    if (preserving.length) {
+      // A constraint, not just a bonus: exclude corner-breaking moves.
+      candidates = preserving;
+      mode = "protected";
+    } else {
+      mode = "escape";
+    }
+  } else {
+    const restoring = candidates.filter(candidate =>
+      anchored(candidate.board, corner)
+    );
+
+    if (restoring.length) {
+      candidates = restoring;
+      mode = "restoring";
     }
   }
 
-  if (!chosen) {
+  let bestCandidate = null;
+
+  for (const candidate of candidates) {
+    const value =
+      expectedValue(candidate.board, corner) + .1 * candidate.points;
+
+    if (!bestCandidate || value > bestCandidate.value) {
+      bestCandidate = { ...candidate, value };
+    }
+  }
+
+  return {
+    direction: bestCandidate.direction,
+    points: bestCandidate.points,
+    spaces: Math.max(0, emptyCells(bestCandidate.board).length - 1),
+    corner: $("corner").value,
+    cornerName: corner.name,
+    mode
+  };
+}
+
+function updateHint() {
+  currentAdvice = null;
+
+  if (!$("coachEnabled").checked) {
+    $("hint").textContent = "Coach off. Play your way.";
+    return;
+  }
+
+  currentAdvice = chooseAdvice();
+
+  if (!currentAdvice) {
     $("hint").textContent = "No legal moves remain.";
     return;
   }
 
+  const a = currentAdvice;
   const arrows = { left: "←", right: "→", up: "↑", down: "↓" };
 
+  const explanations = {
+    protected:
+      `Keeps a largest tile in your ${a.cornerName} corner.`,
+    restoring:
+      `Places a largest tile in your ${a.cornerName} corner.`,
+    escape:
+      "Every legal move breaks the current corner position. " +
+      "This is an escape suggestion.",
+    building:
+      `A largest tile cannot reach your ${a.cornerName} corner ` +
+      "in one move. This suggestion uses your chosen orientation."
+  };
+
   $("hint").textContent =
-    `${arrows[chosen.direction]} Try ${chosen.direction.toUpperCase()}. ` +
-    `Earns ${chosen.points} points immediately and leaves ` +
-    `${chosen.spaces} empty cells after the spawn. ` +
-    `This is a one-move estimate, not a guarantee.`;
+    `${arrows[a.direction]} Try ${a.direction.toUpperCase()}. ` +
+    explanations[a.mode] +
+    ` +${a.points} immediate points; ${a.spaces} spaces after spawning.`;
 }
 
 function render(newTile = null) {
   $("board").replaceChildren();
+  const corner = corners[$("corner").value];
 
   for (let r = 0; r < 4; r++) {
     for (let c = 0; c < 4; c++) {
@@ -449,11 +540,15 @@ function render(newTile = null) {
       if (value) {
         tile.textContent = value;
         tile.style.background = colors[value] || "#514359";
-        tile.style.color = value <= 4 ? "#645447" : "#fff";
+        tile.style.color = value <= 4 ? "#645447" : "white";
         if (value >= 1024) tile.classList.add("small");
       }
 
-      if (newTile && newTile.row === r && newTile.column === c) {
+      if (r === corner.r && c === corner.c) {
+        tile.classList.add("anchor");
+      }
+
+      if (newTile && r === newTile.row && c === newTile.column) {
         tile.classList.add("spawn");
       }
 
@@ -461,6 +556,7 @@ function render(newTile = null) {
         "aria-label",
         `Row ${r + 1}, column ${c + 1}: ${value || "empty"}`
       );
+
       $("board").appendChild(tile);
     }
   }
@@ -473,11 +569,9 @@ function render(newTile = null) {
 
 function newGame() {
   if (record && record.moves.length > exportedMoves) {
-    const proceed = confirm(
-      "This game has moves you haven't downloaded. " +
-      "Start a new game anyway? Cancel to download first."
-    );
-    if (!proceed) return;
+    if (!confirm(
+      "There are moves you haven't downloaded. Start a new game anyway?"
+    )) return;
   }
 
   board = Array.from({ length: 4 }, () => [0, 0, 0, 0]);
@@ -490,6 +584,7 @@ function newGame() {
 
   record = {
     format_version: 1,
+    coach_version: "fixed-corner-v1",
     started_at: new Date().toISOString(),
     status: "playing",
     coordinate_note: "Rows and columns start at 0.",
@@ -499,7 +594,7 @@ function newGame() {
     score: 0
   };
 
-  $("status").textContent = "Your next little adventure.";
+  $("status").textContent = "Choose your corner, then enjoy the game.";
   render();
 }
 
@@ -517,6 +612,8 @@ function play(direction) {
   }
 
   const before = copy(board);
+  const adviceBefore = currentAdvice ? { ...currentAdvice } : null;
+
   board = result.board;
   score += result.points;
   const newTile = spawn(board);
@@ -525,6 +622,8 @@ function play(direction) {
     number: record.moves.length + 1,
     time: new Date().toISOString(),
     direction,
+    preferred_corner: $("corner").value,
+    advice_shown: adviceBefore,
     board_before: before,
     spawned_tile: newTile,
     board_after: copy(board),
@@ -544,7 +643,7 @@ function play(direction) {
 
   let message = result.points ? `+${result.points} points!` : "Keep going.";
 
-  if (!won && Math.max(...board.flat()) >= 2048) {
+  if (!won && largest(board) >= 2048) {
     won = true;
     message = "You made 2048! You can keep playing.";
   }
@@ -577,23 +676,20 @@ function downloadRecording() {
 
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   exportedMoves = record.moves.length;
-  $("status").textContent = "Recording download requested—check Downloads.";
+  $("status").textContent = "Download requested—check Downloads.";
 }
 
 document.addEventListener("keydown", event => {
-  const tag = document.activeElement.tagName;
-  if (["INPUT", "SELECT", "TEXTAREA", "BUTTON"].includes(tag)) return;
+  if (["INPUT", "SELECT", "TEXTAREA", "BUTTON"].includes(
+    document.activeElement.tagName
+  )) return;
+
   if (event.ctrlKey || event.metaKey || event.altKey) return;
 
   const keys = {
-    ArrowLeft: "left",
-    ArrowRight: "right",
-    ArrowUp: "up",
-    ArrowDown: "down",
-    a: "left",
-    d: "right",
-    w: "up",
-    s: "down"
+    ArrowLeft: "left", ArrowRight: "right",
+    ArrowUp: "up", ArrowDown: "down",
+    a: "left", d: "right", w: "up", s: "down"
   };
 
   const direction = keys[event.key] || keys[event.key.toLowerCase()];
@@ -608,7 +704,13 @@ let touchStart = null;
 
 $("board").addEventListener("pointerdown", event => {
   if (event.pointerType === "mouse") return;
-  touchStart = { x: event.clientX, y: event.clientY, id: event.pointerId };
+
+  touchStart = {
+    x: event.clientX,
+    y: event.clientY,
+    id: event.pointerId
+  };
+
   $("board").setPointerCapture(event.pointerId);
 });
 
@@ -639,6 +741,11 @@ $("newGame").addEventListener("click", () => {
 
 $("download").addEventListener("click", () => {
   downloadRecording();
+  $("board").focus();
+});
+
+$("corner").addEventListener("change", () => {
+  render();
   $("board").focus();
 });
 
